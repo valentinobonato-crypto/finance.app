@@ -1,0 +1,26 @@
+name: Daily Finance Agent
+
+on:
+  schedule:
+    - cron: '0 11 * * *' # Ejecutar a las 08:00 AM hora Arg
+  workflow_dispatch:      # Botón para ejecutar manual
+
+jobs:
+  run-agent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: Install libraries
+        run: pip install -r requirements.txt
+        
+      - name: Run Agent
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: python scripts/daily_agent.py
